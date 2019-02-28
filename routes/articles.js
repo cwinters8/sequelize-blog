@@ -25,7 +25,6 @@ function getAllArticles() {
       shortDescription: shortDescription
     });
     });
-    console.log(articles);
     return articles;
   });
 }
