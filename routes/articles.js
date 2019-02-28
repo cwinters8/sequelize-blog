@@ -2,23 +2,11 @@ var express = require('express');
 var router = express.Router();
 const Article = require('../models').Article;
 
-function getAllArticles() {
-  return Article.findAll();
-}
-
-function find(id) {
-  return getAllArticles().then(data => {
-    const matchedArticles = data.filter(function(article) { return article.id == id; });
-    return matchedArticles[0];
-  })
-}
-
-
 /* GET articles listing. */
 router.get('/', function(req, res, next) {
-  getAllArticles().then(articles => {
+  Article.findAll({order: [["createdAt", "DESC"]]}).then(articles => {
     res.render("articles/index", {articles: articles, title: "My Awesome Blog" });
-  })
+  });
 });
 
 /* POST create article. */
@@ -51,7 +39,7 @@ router.get("/:id/delete", function(req, res, next){
 
 /* GET individual article. */
 router.get("/:id", function(req, res, next){
-  find(req.params.id).then(article => {
+  Article.findById(req.params.id).then(article => {
     res.render("articles/show", {article: article, title: article.title});
   })
 });
