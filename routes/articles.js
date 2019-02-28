@@ -2,32 +2,8 @@ var express = require('express');
 var router = express.Router();
 const Article = require('../models').Article;
 
-var dateFormat = require('dateformat');
-
-function publishedAt() {
-  return dateFormat(this.createdAt, "dddd, mmmm dS, yyyy, h:MM TT");
-}
-
-function shortDescription(){ 
-  return this.body.length > 30 ? this.body.substr(0, 30) + "..." : this.body;
-}
-
 function getAllArticles() {
-  return Article.findAll().then(data => {
-    const articles = [];
-    data.forEach(article => {
-    articles.push({
-      id: article.id,
-      title: article.title,
-      author: article.author,
-      body: article.body,
-      createdAt: article.createdAt,
-      publishedAt: publishedAt,
-      shortDescription: shortDescription
-    });
-    });
-    return articles;
-  });
+  return Article.findAll();
 }
 
 function find(id) {
@@ -76,7 +52,6 @@ router.get("/:id/delete", function(req, res, next){
 /* GET individual article. */
 router.get("/:id", function(req, res, next){
   find(req.params.id).then(article => {
-    console.log(article);
     res.render("articles/show", {article: article, title: article.title});
   })
 });
