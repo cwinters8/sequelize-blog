@@ -21,6 +21,7 @@ function getAllArticles() {
       title: article.title,
       author: article.author,
       body: article.body,
+      createdAt: article.createdAt,
       publishedAt: publishedAt,
       shortDescription: shortDescription
     });
