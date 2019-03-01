@@ -24,7 +24,11 @@ router.get('/new', function(req, res, next) {
 /* Edit article form. */
 router.get("/:id/edit", function(req, res, next){
   Article.findById(req.params.id).then(article => {
-    res.render("articles/edit", {article: article, title: "Edit Article"});
+    if (article) {
+      res.render("articles/edit", {article: article, title: "Edit Article"});
+    } else {
+      res.send(404);
+    }
   }).catch(err => res.send(500));
 });
 
@@ -32,7 +36,11 @@ router.get("/:id/edit", function(req, res, next){
 /* Delete article form. */
 router.get("/:id/delete", function(req, res, next){
   Article.findById(req.params.id).then(article => {
-    res.render("articles/delete", {article: article, title: "Delete Article"});
+    if (article) {
+      res.render("articles/delete", {article: article, title: "Delete Article"});
+    } else {
+      res.send(404);
+    }
   }).catch(err => res.send(500));
 });
 
@@ -40,14 +48,22 @@ router.get("/:id/delete", function(req, res, next){
 /* GET individual article. */
 router.get("/:id", function(req, res, next){
   Article.findById(req.params.id).then(article => {
-    res.render("articles/show", {article: article, title: article.title});
+    if (article) {
+      res.render("articles/show", {article: article, title: article.title});
+    } else {
+      res.send(404);
+    }
   }).catch(err => res.send(500));
 });
 
 /* PUT update article. */
 router.put("/:id", function(req, res, next){
   Article.findById(req.params.id).then(article => {
-    return article.update(req.body);
+    if (article) {
+      return article.update(req.body);
+    } else {
+      res.send(404);
+    }
   }).then(article => {
     res.redirect("/articles/" + article.id);
   }).catch(err => res.send(500));
@@ -56,7 +72,11 @@ router.put("/:id", function(req, res, next){
 /* DELETE individual article. */
 router.delete("/:id", function(req, res, next){
   Article.findById(req.params.id).then(article => {
-    return article.destroy();
+    if (article) {
+      return article.destroy();
+    } else {
+      res.send(404);
+    }
   }).then(() => res.redirect("/articles")).catch(err => res.send(500));
 });
 
