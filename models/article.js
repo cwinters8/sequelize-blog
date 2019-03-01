@@ -14,9 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     author: DataTypes.STRING,
     body: DataTypes.TEXT
   });
-  Article.associate = function(models) {
-    // associations can be defined here
-  };
 
   Article.prototype.publishedAt = function() {
     return dateFormat(this.createdAt, "dddd, mmmm dS, yyyy, h:MM TT");
