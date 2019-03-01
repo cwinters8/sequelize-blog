@@ -6,14 +6,14 @@ const Article = require('../models').Article;
 router.get('/', function(req, res, next) {
   Article.findAll({order: [["createdAt", "DESC"]]}).then(articles => {
     res.render("articles/index", {articles: articles, title: "My Awesome Blog" });
-  });
+  }).catch(err => res.send(500));
 });
 
 /* POST create article. */
 router.post('/', function(req, res, next) {
   Article.create(req.body).then(article => {
     res.redirect('/articles/' + article.id);
-  });
+  }).catch(err => res.send(500));
 });
 
 /* Create a new article form. */
@@ -25,15 +25,15 @@ router.get('/new', function(req, res, next) {
 router.get("/:id/edit", function(req, res, next){
   Article.findById(req.params.id).then(article => {
     res.render("articles/edit", {article: article, title: "Edit Article"});
-  })
+  }).catch(err => res.send(500));
 });
 
 
 /* Delete article form. */
 router.get("/:id/delete", function(req, res, next){
-  var article = find(req.params.id);  
-  
-  res.render("articles/delete", {article: article, title: "Delete Article"});
+  Article.findById(req.params.id).then(article => {
+    res.render("articles/delete", {article: article, title: "Delete Article"});
+  }).catch(err => res.send(500));
 });
 
 
@@ -41,7 +41,7 @@ router.get("/:id/delete", function(req, res, next){
 router.get("/:id", function(req, res, next){
   Article.findById(req.params.id).then(article => {
     res.render("articles/show", {article: article, title: article.title});
-  })
+  }).catch(err => res.send(500));
 });
 
 /* PUT update article. */
@@ -50,16 +50,14 @@ router.put("/:id", function(req, res, next){
     return article.update(req.body);
   }).then(article => {
     res.redirect("/articles/" + article.id);
-  })
+  }).catch(err => res.send(500));
 });
 
 /* DELETE individual article. */
 router.delete("/:id", function(req, res, next){
-  var article = find(req.params.id);  
-  var index = articles.indexOf(article);
-  articles.splice(index, 1);
-
-  res.redirect("/articles");
+  Article.findById(req.params.id).then(article => {
+    return article.destroy();
+  }).then(() => res.redirect("/articles")).catch(err => res.send(500));
 });
 
 
