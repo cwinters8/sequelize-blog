@@ -3,7 +3,14 @@ var dateFormat = require('dateformat');
 
 module.exports = (sequelize, DataTypes) => {
   const Article = sequelize.define('Article', {
-    title: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          msg: 'Title is required'
+        }
+      }
+    },
     author: DataTypes.STRING,
     body: DataTypes.TEXT
   });
